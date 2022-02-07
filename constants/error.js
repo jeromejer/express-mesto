@@ -1,0 +1,9 @@
+const NOT_FOUND = 404;
+const VALIDATION_ERROR = 400;
+const CONFLICT_ERROR = 11000;
+
+module.exports = {
+  NOT_FOUND,
+  VALIDATION_ERROR,
+  CONFLICT_ERROR,
+};
