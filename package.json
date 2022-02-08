@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/jeromejer/express-mesto.git"
   },
-  "author": "",
+  "author": "Alexandra Lazukova",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jeromejer/express-mesto/issues"
@@ -28,8 +28,6 @@
   },
   "dependencies": {
     "body-parser": "^1.19.1",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.4",
     "express": "^4.17.2",
     "mongoose": "^6.2.0"
   },

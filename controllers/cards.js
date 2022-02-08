@@ -5,7 +5,6 @@ const BAD_REQUEST_ERROR = require('../constants/error');
 
 module.exports.getCards = (req, res, next) => {
   Cards.find({})
-    .orFail(new NotFoundError('Карточки не найдены'))
     .then((card) => res.send({ data: card }))
     .catch(next);
 };
@@ -18,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
       res.send({ data: card });
     })
     .catch((err) => {
-      if (err.code === BAD_REQUEST_ERROR) {
+      if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные'));
       } else {
         next(err);
@@ -35,17 +34,47 @@ module.exports.deleteCards = (req, res, next) => {
         res.status(200).send({ data: card });
       }
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new NotFoundError('Пользователя с таким ID не существует'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.likesCards = (req, res, next) => {
   Cards.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .then((card) => res.send({ data: card }))
-    .catch(next);
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка не найдена');
+      } else {
+        res.status(200).send({ data: card });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new NotFoundError('Пользователя с таким ID не существует'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.diselikesCards = (req, res, next) => {
   Cards.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-    .then((card) => res.send({ data: card }))
-    .catch(next);
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка не найдена');
+      } else {
+        res.status(200).send({ data: card });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new NotFoundError('Пользователя с таким ID не существует'));
+      } else {
+        next(err);
+      }
+    });
 };
