@@ -1,7 +1,6 @@
 const Cards = require('../models/card');
 const NotFoundError = require('../errors/not-found-error');
 const ValidationError = require('../errors/bad-request-error');
-const BAD_REQUEST_ERROR = require('../constants/error');
 
 module.exports.getCards = (req, res, next) => {
   Cards.find({})
@@ -36,7 +35,7 @@ module.exports.deleteCards = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new NotFoundError('Пользователя с таким ID не существует'));
+        next(new ValidationError('Пользователя с таким ID не существует'));
       } else {
         next(err);
       }
@@ -54,7 +53,7 @@ module.exports.likesCards = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new NotFoundError('Пользователя с таким ID не существует'));
+        next(new ValidationError('Пользователя с таким ID не существует'));
       } else {
         next(err);
       }
@@ -72,7 +71,7 @@ module.exports.diselikesCards = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new NotFoundError('Пользователя с таким ID не существует'));
+        next(new ValidationError('Пользователя с таким ID не существует'));
       } else {
         next(err);
       }

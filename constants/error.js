@@ -1,6 +1,6 @@
 const NOT_FOUND = 404;
 const VALIDATION_ERROR = 400;
-const CONFLICT_ERROR = 11000;
+const CONFLICT_ERROR = 409;
 
 module.exports = {
   NOT_FOUND,
