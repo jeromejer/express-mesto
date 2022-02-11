@@ -4,10 +4,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const validator = require('validator');
 const errorHandler = require('./middleware/error-handler');
 const { createUsers } = require('./controllers/users');
 const { login } = require('./controllers/login');
 const { auth } = require('./middleware/auth');
+const NotFoundError = require('./errors/not-found-error');
 
 const { PORT = 3000 } = process.env;
 
@@ -33,7 +35,12 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/^(https?:\/\/)([\da-z.-])\.([a-z.]{2,6})([/\w .-]*)/),
+    avatar: Joi.string().required().custom((value, helper) => {
+      if (!validator.isURL(value)) {
+        return helper.error('any.invalid');
+      }
+      return value;
+    }),
 
   }),
 }), createUsers);
@@ -44,7 +51,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use((req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
+  throw new NotFoundError('Запрашиваемая страница не найдена');
 });
 
 app.use(errors());

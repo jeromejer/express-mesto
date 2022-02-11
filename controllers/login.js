@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const BadAuthorizedError = require('../errors/unauthorized');
 
@@ -6,13 +7,10 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      res.send({ user });
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.send({ token });
     })
     .catch((err) => {
-      if (err.code === 401) {
-        next(new BadAuthorizedError('Ошибка авторизации'));
-      } else {
-        next();
-      }
+      next(new BadAuthorizedError(err.message));
     });
 };

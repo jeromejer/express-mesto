@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const ValidationError = require('../errors/bad-request-error');
-const ConflictError = require('../errors/bad-request-error');
+const ConflictError = require('../errors/conflict-error');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -62,10 +62,10 @@ module.exports.createUsers = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Введены некорректные данные'));
-      } if (err.name === 'MongoError' && err.code === 11000) {
+      } if (err.code === 11000) {
         next(new ConflictError('Такой пользователь уже зарегистрирован'));
       } else {
-        next();
+        next(err);
       }
     });
 };
