@@ -9,6 +9,7 @@ const { createUsers } = require('./controllers/users');
 const { login } = require('./controllers/login');
 const { auth } = require('./middleware/auth');
 const NotFoundError = require('./errors/not-found-error');
+const { requestLogger, errorLogger } = require('./middleware/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -20,6 +21,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -55,6 +58,7 @@ app.use((req, res) => {
   });
 });
 
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 

@@ -8,7 +8,8 @@
     "lint": "npx eslint .",
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "mongo": "brew services start mongodb-community@4.4"
+    "mongo": "brew services start mongodb-community@4.4",
+    "deploy": "npm run build && scp -r ./build/* praktikum@84.201.172.240:/home/praktikum/mesto-frontend"
   },
   "repository": {
     "type": "git",
@@ -31,9 +32,11 @@
     "body-parser": "^1.19.1",
     "celebrate": "^15.0.1",
     "express": "^4.17.2",
+    "express-winston": "^4.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.0",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "winston": "^3.6.0"
   },
   "keywords": []
 }
